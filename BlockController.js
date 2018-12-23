@@ -1,7 +1,12 @@
 const SHA256 = require('crypto-js/sha256')
 const BlockClass = require('./Block.js')
 const BlockChain = require('./BlockChain.js')
+const MemPool = require('./MemPool.js')
+const Request = require('./Request.js')
+
 let blockchain = new BlockChain.Blockchain()
+let mempool = new MemPool.MemPool()
+
 /**
  * Controller Definition to encapsulate routes to work with blocks
  */
@@ -53,16 +58,27 @@ class BlockController {
       method: 'POST',
       path: '/requestValidation',
       handler: (request, h) => {
-        let response = {
-          walletAdress: request.payload.address,
-          requestTimeStamp: new Date().getTime().toString().slice(0, -3),
-          validationWindow: 300
-        }
-        response.message = `${request.payload.address}:${response.requestTimeStamp}:starRegistry`
-        if (request.payload.address) {
-          return response
+        const validationRequest = new Request.Request(request.payload.address)
+        if (validationRequest.walletAdress) {
+          mempool.addValidationRequest(validationRequest)
+          return validationRequest
         } else {
           return 'Please provide an address in your request.'
+        }
+      }
+    })
+  }
+
+  // POST Endpoint to submit a validation request
+  vaidateMessageSignature () {
+    this.server.route({
+      method: 'POST',
+      path: '/message-signature/validate',
+      handler: (request, h) => {
+        if (request.payload.address & request.payload.signature) {
+
+        } else {
+          return 'Please include both an address and signature in your request.'
         }
       }
     })
