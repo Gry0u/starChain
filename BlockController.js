@@ -14,6 +14,7 @@ class BlockController {
     this.server = server
     this.getBlockByIndex()
     this.postNewBlock()
+    this.requestValidation()
   }
 
   /* GET Endpoint to retrieve a block by index, url: "/api/block/:index" */
@@ -42,6 +43,26 @@ class BlockController {
           return 'Block added \n' + JSON.stringify(newBlock)
         } else {
           return "Block to add doesn't have any content so wasn't added!"
+        }
+      }
+    })
+  }
+  // POST Endpoint to submit a validation request
+  requestValidation () {
+    this.server.route({
+      method: 'POST',
+      path: '/requestValidation',
+      handler: (request, h) => {
+        let response = {
+          walletAdress: request.payload.address,
+          requestTimeStamp: new Date().getTime().toString().slice(0, -3),
+          validationWindow: 300
+        }
+        response.message = `${request.payload.address}:${response.requestTimeStamp}:starRegistry`
+        if (request.payload.address) {
+          return response
+        } else {
+          return 'Please provide an address in your request.'
         }
       }
     })
