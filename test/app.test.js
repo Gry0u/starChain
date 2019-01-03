@@ -1,13 +1,16 @@
 const test = require('ava')
+const bluebird = require('bluebird')
+const rp = require('request-promise')
+const fs = bluebird.promisifyAll(require('fs'))
 const supertest = require('supertest')
 const bitcoin = require('bitcoinjs-lib')
 const bitcoinMessage = require('bitcoinjs-message')
-const fs = require('fs');
 const SERVER_URL = 'http://localhost:8000'
 const app = require('../app')
 const keyPair = bitcoin.ECPair.makeRandom()
 const privateKey = keyPair.privateKey
 const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey })
+fs.writeFileSync('data/address.txt', address)
 
 test.cb('1. /requestValidation: returns a Request JSON object', (t) => {
   supertest(SERVER_URL)
@@ -23,7 +26,22 @@ test.cb('1. /requestValidation: returns a Request JSON object', (t) => {
 
       // write signature into text file for reuse in further tests
       const signature = bitcoinMessage.sign(response.body.message, privateKey, keyPair.compressed).toString('base64')
-      fs.writeFileSync('./data/signature.txt', signature)
+      fs.writeFileSync('data/signature.txt', signature)
     })
     .end(t.end)
+})
+
+test('2. /message-signature/validate: returns a JSON object with registerStar and status properties', async t => {
+  const signature = await fs.readFileAsync('data/signature.txt')
+  const options = {
+    method: 'POST',
+    uri: SERVER_URL + '/message-signature/validate',
+    body: {
+      address: address,
+      signature: signature.toString()
+    },
+    json: true
+  }
+  const response = await rp(options)
+  t.true(response.registerStar)
 })

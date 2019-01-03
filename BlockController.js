@@ -95,7 +95,7 @@ class BlockController {
       method: 'POST',
       path: '/message-signature/validate',
       handler: (request, h) => {
-
+        return mempool.validateRequestByWallet(request.payload.address, request.payload.signature)
       }
     })
   }
