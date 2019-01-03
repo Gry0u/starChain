@@ -1,11 +1,8 @@
 /* Controller to manage routes of Web API
 */
-
-const SHA256 = require('crypto-js/sha256')
 const BlockClass = require('./Block.js')
 const BlockChain = require('./BlockChain.js')
 const MemPool = require('./MemPool.js')
-const Request = require('./Request.js')
 
 let blockchain = new BlockChain.Blockchain('data/chain')
 let mempool = new MemPool.MemPool('data/mempool')
@@ -20,26 +17,25 @@ class BlockController {
      */
   constructor (server) {
     this.server = server
-    // this.requestValidation()
-    // this.validate()
-    // this.addStar()
-    // this.getStarByHash()
-    // this.getStarsByWallet()
+    this.requestValidation()
+    this.validate()
+    this.addStar()
+    this.getStarByHash()
+    this.getStarsByWallet()
     this.getStarByHeight()
   }
 
-  /* GET Endpoint to retrieve a star block by height, url: "block/[HEIGHT]" */
+  // GET Endpoint to retrieve a star block by height, url: "block/[HEIGHT]"
   getStarByHeight () {
     this.server.route({
       method: 'GET',
       path: '/block/{height}',
       handler: (request, h) => {
-        return `test: ${request.params.height}`//blockchain.getBlock(request.params.height)
+        return blockchain.getBlock(request.params.height)
       }
     })
   }
 
-/*
   // GET Endpoint to retrieve a star block by hash, url: "/stars/hash:[HASH]"
   getStarByHash () {
     this.server.route({
@@ -81,7 +77,7 @@ class BlockController {
     })
   }
   // POST Endpoint to submit a validation request
-  //request data: "address=..."
+  // request data: "address=..."
   requestValidation () {
     this.server.route({
       method: 'POST',
@@ -94,7 +90,6 @@ class BlockController {
 
   // POST Endpoint to validate message signatures
   // request data: "address=...&signature=..."
-
   validate () {
     this.server.route({
       method: 'POST',
@@ -104,7 +99,6 @@ class BlockController {
       }
     })
   }
-  */
 }
 //
 // * Exporting the BlockController class

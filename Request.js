@@ -1,5 +1,5 @@
 class Request {
-  constructor (walletAddress) {
+  constructor (address) {
     this.address = address
     this.requestTimeStamp = new Date().getTime().toString().slice(0, -3)
     this.validationWindow = 300
