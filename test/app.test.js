@@ -20,14 +20,14 @@ const optionsRequestValidation = {
   json: true
 }
 
-test('1. /requestValidation: returns a Request JSON object', async t => {
+test.serial('1. /requestValidation: returns a Request JSON object', async t => {
   const requestObject = await rp(optionsRequestValidation)
   t.is(requestObject.address, address)
   t.is(requestObject.validationWindow, 300)
   t.is(requestObject.message, `${address}:${requestObject.requestTimeStamp}:starRegistry`)
 })
 
-test('2. /message-signature/validate: returns a JSON object with registerStar and status properties', async t => {
+test.serial('2. /message-signature/validate: returns a JSON object with registerStar and status properties', async t => {
   const message = (await rp(optionsRequestValidation)).message
   const signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed).toString('base64')
   const optionsMessageSignature = {
@@ -43,4 +43,17 @@ test('2. /message-signature/validate: returns a JSON object with registerStar an
   t.true(validRequestObj.registerStar)
   t.is(validRequestObj.status.address, address)
   t.true(validRequestObj.status.messageSignature)
+})
+
+test.serial('3. /block: returns boolean describing if address is verified and if a star can be registered', async t => {
+  const optionsBlock = {
+    method: 'POST',
+    uri: SERVER_URL + '/block',
+    body: {
+      address: address
+    },
+    json: true
+  }
+  const request = await rp(optionsBlock)
+  t.true(request.messageSignature)
 })
