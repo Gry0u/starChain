@@ -3,12 +3,10 @@
 /=================================================== */
 
 const level = require('level')
-// TODO: change to ./chaindata when ready
-const chainDB = './chaindata'
 
-class LevelSandbox {
-  constructor () {
-    this.db = level(chainDB)
+class LevelDB {
+  constructor (chainDBPath) {
+    this.db = level(chainDBPath)
   }
 
   // Get data from levelDB with key (Promise)
@@ -67,4 +65,4 @@ class LevelSandbox {
   }
 }
 
-module.exports.LevelSandbox = LevelSandbox
+module.exports.LevelDB = LevelDB

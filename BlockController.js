@@ -1,11 +1,14 @@
+/* Controller to manage routes of Web API
+*/
+
 const SHA256 = require('crypto-js/sha256')
 const BlockClass = require('./Block.js')
 const BlockChain = require('./BlockChain.js')
 const MemPool = require('./MemPool.js')
 const Request = require('./Request.js')
 
-let blockchain = new BlockChain.Blockchain()
-let mempool = new MemPool.MemPool()
+let blockchain = new BlockChain.Blockchain('data/chain')
+let mempool = new MemPool.MemPool('data/mempool')
 
 /**
  * Controller Definition to encapsulate routes to work with blocks
@@ -17,26 +20,51 @@ class BlockController {
      */
   constructor (server) {
     this.server = server
-    this.getBlockByIndex()
-    this.postNewBlock()
-    this.requestValidation()
+    // this.requestValidation()
+    // this.validate()
+    // this.addStar()
+    // this.getStarByHash()
+    // this.getStarsByWallet()
+    this.getStarByHeight()
   }
 
-  /* GET Endpoint to retrieve a block by index, url: "/api/block/:index" */
-  getBlockByIndex () {
+  /* GET Endpoint to retrieve a star block by height, url: "block/[HEIGHT]" */
+  getStarByHeight () {
     this.server.route({
       method: 'GET',
-      path: '/api/block/{index}',
+      path: '/block/{height}',
       handler: (request, h) => {
-        return blockchain.getBlock(request.params.index)
+        return `test: ${request.params.height}`//blockchain.getBlock(request.params.height)
       }
     })
   }
 
-  /**
-     * POST Endpoint to add a new Block, url: "/api/block"
-     */
-  postNewBlock () {
+/*
+  // GET Endpoint to retrieve a star block by hash, url: "/stars/hash:[HASH]"
+  getStarByHash () {
+    this.server.route({
+      method: 'GET',
+      path: '/stars/hash:{hash}',
+      handler: (request, h) => {
+
+      }
+    })
+  }
+
+  // GET Endpoint to retrieve star blocks by wallet address, url: "/stars/address:[ADDRESS]"
+  getStarsByWallet () {
+    this.server.route({
+      method: 'GET',
+      path: '/stars/address:{address}',
+      handler: (request, h) => {
+
+      }
+    })
+  }
+
+  // POST Endpoint to add a new Star Block, url: "/block"
+  // request data:
+  addStar () {
     this.server.route({
       method: 'POST',
       path: '/api/block',
@@ -53,40 +81,33 @@ class BlockController {
     })
   }
   // POST Endpoint to submit a validation request
+  //request data: "address=..."
   requestValidation () {
     this.server.route({
       method: 'POST',
       path: '/requestValidation',
-      handler: (request, h) => {
-        const validationRequest = new Request.Request(request.payload.address)
-        if (validationRequest.walletAdress) {
-          mempool.addValidationRequest(validationRequest)
-          return validationRequest
-        } else {
-          return 'Please provide an address in your request.'
-        }
+      handler: async (request, h) => {
+        return JSON.parse(await mempool.addValidationRequest(request.payload.address))
       }
     })
   }
 
-  // POST Endpoint to submit a validation request
-  vaidateMessageSignature () {
+  // POST Endpoint to validate message signatures
+  // request data: "address=...&signature=..."
+
+  validate () {
     this.server.route({
       method: 'POST',
       path: '/message-signature/validate',
       handler: (request, h) => {
-        if (request.payload.address & request.payload.signature) {
 
-        } else {
-          return 'Please include both an address and signature in your request.'
-        }
       }
     })
   }
+  */
 }
-
-/**
- * Exporting the BlockController class
- * @param {*} server
- */
+//
+// * Exporting the BlockController class
+// * @param {*} server
+//
 module.exports = (server) => { return new BlockController(server) }

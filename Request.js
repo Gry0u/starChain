@@ -1,9 +1,9 @@
 class Request {
   constructor (walletAddress) {
-    this.walletAddress = walletAddress
+    this.address = address
     this.requestTimeStamp = new Date().getTime().toString().slice(0, -3)
     this.validationWindow = 300
-    this.message = `${this.walletAddress}:${this.requestTimeStamp}:starRegistry`
+    this.message = `${this.address}:${this.requestTimeStamp}:starRegistry`
   }
 }
 

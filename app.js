@@ -1,3 +1,6 @@
+/* Starts Web API for Star Notary Service
+*/
+
 const Hapi = require('hapi')
 
 /**

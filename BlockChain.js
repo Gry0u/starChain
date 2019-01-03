@@ -3,12 +3,12 @@
 |  ================================================ */
 
 const SHA256 = require('crypto-js/sha256')
-const LevelSandbox = require('./LevelSandbox.js')
+const LevelDB = require('./LevelDB.js')
 const Block = require('./Block.js')
 
 class Blockchain {
-  constructor () {
-    this.bd = new LevelSandbox.LevelSandbox()
+  constructor (chainDBPath) {
+    this.bd = new LevelDB.LevelDB(chainDBPath)
     this.generateGenesisBlock()
   }
 
