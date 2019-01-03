@@ -21,10 +21,9 @@ test.cb('1. /requestValidation: returns a Request JSON object', (t) => {
       t.hasOwnProperty('requestTimeStamp')
       t.is(response.body.message, `${address}:${response.body.requestTimeStamp}:starRegistry`)
 
-      // const message = response.body.message
-      // const signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed).toString('base64')
-      //
-      // fs.writeFileSync('./data/signature.txt', signature)
+      // write signature into text file for reuse in further tests
+      const signature = bitcoinMessage.sign(response.body.message, privateKey, keyPair.compressed).toString('base64')
+      fs.writeFileSync('./data/signature.txt', signature)
     })
     .end(t.end)
 })
