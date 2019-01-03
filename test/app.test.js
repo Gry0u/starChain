@@ -1,8 +1,8 @@
 const test = require('ava')
-const bluebird = require('bluebird')
+// const bluebird = require('bluebird')
 const rp = require('request-promise')
-const fs = bluebird.promisifyAll(require('fs'))
-const supertest = require('supertest')
+// const fs = bluebird.promisifyAll(require('fs'))
+// const supertest = require('supertest')
 const bitcoin = require('bitcoinjs-lib')
 const bitcoinMessage = require('bitcoinjs-message')
 const SERVER_URL = 'http://localhost:8000'
@@ -11,7 +11,7 @@ const keyPair = bitcoin.ECPair.makeRandom()
 const privateKey = keyPair.privateKey
 const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey })
 
-const options1 = {
+const optionsRequestValidation = {
   method: 'POST',
   uri: SERVER_URL + '/requestValidation',
   body: {
@@ -21,18 +21,16 @@ const options1 = {
 }
 
 test('1. /requestValidation: returns a Request JSON object', async t => {
-  const response = await rp(options1)
-  t.is(response.address, address)
-  t.is(response.validationWindow, 300)
-  t.is(response.message, `${address}:${response.requestTimeStamp}:starRegistry`)
+  const requestObject = await rp(optionsRequestValidation)
+  t.is(requestObject.address, address)
+  t.is(requestObject.validationWindow, 300)
+  t.is(requestObject.message, `${address}:${requestObject.requestTimeStamp}:starRegistry`)
 })
 
 test('2. /message-signature/validate: returns a JSON object with registerStar and status properties', async t => {
-  // const signature = await fs.readFileAsync('data/signature.txt')
-
-  const message = (await rp(options1)).message
+  const message = (await rp(optionsRequestValidation)).message
   const signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed).toString('base64')
-  const options2 = {
+  const optionsMessageSignature = {
     method: 'POST',
     uri: SERVER_URL + '/message-signature/validate',
     body: {
@@ -41,6 +39,8 @@ test('2. /message-signature/validate: returns a JSON object with registerStar an
     },
     json: true
   }
-  const response2 = await rp(options2)
-  t.true(response2.registerStar)
+  const validRequestObj = await rp(optionsMessageSignature)
+  t.true(validRequestObj.registerStar)
+  t.is(validRequestObj.status.address, address)
+  t.true(validRequestObj.status.messageSignature)
 })
