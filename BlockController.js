@@ -30,7 +30,7 @@ class BlockController {
     this.server.route({
       method: 'GET',
       path: '/block/{height}',
-      handler: (request, h) => {
+      handler: async (request, h) => {
         return blockchain.getBlock(request.params.height)
       }
     })

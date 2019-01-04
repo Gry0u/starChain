@@ -14,6 +14,11 @@ const optionsRequestValidation = {
   json: true
 }
 
+const optionsGetBlockByIndex = {
+  method: 'GET',
+  uri: SERVER_URL + '/block/0'
+}
+
 test.serial('1. /requestValidation: returns a Request JSON object', async t => {
   const requestObject = await rp(optionsRequestValidation)
   t.is(requestObject.address, address)
@@ -39,8 +44,8 @@ test.serial('2. /message-signature/validate: returns a JSON object with register
   t.is(validRequestObj.status.address, address)
 })
 
-test.serial('3. /block: adds a star block to the blockchain. Returns the added block as JSON object', async t => {
-  const optionsBlock = {
+test('3. /block: adds a star block to the blockchain. Returns the added block as JSON object', async t => {
+  const optionsAddBlock = {
     method: 'POST',
     uri: SERVER_URL + '/block',
     body: {
@@ -53,11 +58,28 @@ test.serial('3. /block: adds a star block to the blockchain. Returns the added b
     },
     json: true
   }
-  const starBlock = await rp(optionsBlock)
+  const starBlock = await rp(optionsAddBlock)
   t.truthy(starBlock.hash)
   t.truthy(starBlock.height)
   t.truthy(starBlock.body.story)
   t.truthy(starBlock.time)
   t.truthy(starBlock.previousBlockHash)
   t.is(starBlock.body.address, address)
+})
+
+test('4. /block/[INDEX]: returns block of the corresponding height as JSON object', async t => {
+  const block = JSON.parse(await rp(optionsGetBlockByIndex))
+  t.is(block.height, 0)
+  t.is(block.body, 'Genesis Block')
+})
+
+test('5. /stars/hash:[HASH]: returns block of the corresponding hash as JSON object', async t => {
+  const hash = JSON.parse(await rp(optionsGetBlockByIndex)).hash
+  const optionsGetBlockByHash = {
+    method: 'GET',
+    uri: SERVER_URL + '/stars/hash:' + hash
+  }
+  const block = JSON.parse(await rp(optionsGetBlockByHash))
+  t.is(block.height, 0)
+  t.is(block.body, 'Genesis Block')
 })
