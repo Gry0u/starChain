@@ -20,10 +20,10 @@ RA 13h 03m 33.35sec, Dec -49° 31’ 38.1” Mag 4.83 Cen
 - **Mempool**: to manage validation requests to grant users the right to register a star.
   - *MemPool.js*
   - *Request.js*
-  - **Blockchain**: to store and persist star blocks
-    - *Blockchain.js*
-    - *LevelDB.js*
-    - *Block.js*
+- **Blockchain**: to store and persist star blocks
+  - *Blockchain.js*
+  - *LevelDB.js*
+  - *Block.js*
 ## Getting Started
 1. Download or clone the repository
 2. Install project dependencies: `npm install`
