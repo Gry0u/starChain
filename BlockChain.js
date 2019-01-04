@@ -5,6 +5,7 @@
 const SHA256 = require('crypto-js/sha256')
 const LevelDB = require('./LevelDB.js')
 const Block = require('./Block.js')
+const hex2ascii = require('hex2ascii')
 
 class Blockchain {
   constructor (chainDBPath) {
@@ -58,7 +59,13 @@ class Blockchain {
   returns: JSON
   */
   async getBlock (height) {
-    return JSON.parse(await this.bd.getLevelDBData(height))
+    try {
+      let block = JSON.parse(await this.bd.getLevelDBData(height))
+      block.body.storyDecoded = hex2ascii(block.body.story)
+      return block
+    } catch (err) {
+      return 'Block not found'
+    }
   }
 
   /* get block object from the blockchain
