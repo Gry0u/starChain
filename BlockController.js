@@ -30,7 +30,7 @@ class BlockController {
     this.server.route({
       method: 'GET',
       path: '/block/{height}',
-      handler: (request, h) => {
+      handler: async (request, h) => {
         return blockchain.getBlock(request.params.height)
       }
     })
@@ -41,8 +41,8 @@ class BlockController {
     this.server.route({
       method: 'GET',
       path: '/stars/hash:{hash}',
-      handler: (request, h) => {
-
+      handler: async (request, h) => {
+        return JSON.parse(await blockchain.getBlockByHash(request.params.hash))
       }
     })
   }
@@ -52,20 +52,54 @@ class BlockController {
     this.server.route({
       method: 'GET',
       path: '/stars/address:{address}',
-      handler: (request, h) => {
-
+      handler: async (request, h) => {
+        return blockchain.getBlocksByWallet(request.params.address)
       }
     })
   }
 
   // POST Endpoint to add a new Star Block, url: "/block"
-  // request data:
+  // request data: address=...&star={dec:.., ra: .., story:..}
   addStar () {
     this.server.route({
       method: 'POST',
+<<<<<<< HEAD
       path: '/block',
       handler: (request, h) => {
         return mempool.verifyAddressRequest(request.payload.address)
+||||||| merged common ancestors
+      path: '/api/block',
+      handler: (request, h) => {
+        // Check if content in the block
+        if (request.payload.data) {
+          const newBlock = new BlockClass.Block(request.payload.data)
+          blockchain.addBlock(new BlockClass.Block(request.payload.data))
+          return 'Block added \n' + JSON.stringify(newBlock)
+        } else {
+          return "Block to add doesn't have any content so wasn't added!"
+        }
+=======
+      path: '/block',
+      handler: async (request, h) => {
+        // Check that address is verified
+        const isValid = mempool.verifyAddressRequest(request.payload.address)
+        if (isValid) {
+          // Encode data
+          const { ra, dec, mag, cen, story } = request.payload.star
+          const body = {
+            address: request.payload.address,
+            ra: ra,
+            dec: dec,
+            mag: mag,
+            cen: cen,
+            story: Buffer.from(story).toString('hex')
+          }
+          // add block
+          return JSON.parse(await blockchain.addBlock(new BlockClass.Block(body)))
+        } else {
+          return 'Address not verified. Validate your address at /message-signature/validate'
+        }
+>>>>>>> 4ebe95bf297c928b256a113e424f34d4a7b78cce
       }
     })
   }
