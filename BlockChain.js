@@ -88,8 +88,23 @@ class Blockchain {
   arg: address
   returns: Promise
   */
-  async getBlockByWallet (address) {
-
+  async getBlocksByWallet (address) {
+    let self = this
+    let blocks = []
+    return new Promise((resolve, reject) => {
+      self.bd.db.createReadStream()
+        .on('data', data => {
+          if (JSON.parse(data.value).body.address === address) {
+            blocks.push(JSON.parse(data.value))
+          }
+        })
+        .on('error', err => {
+          reject(err)
+        })
+        .on('close', _ => {
+          resolve(blocks)
+        })
+    })
   }
 
   /* Validate block = check if a block has been tampered

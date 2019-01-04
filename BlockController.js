@@ -52,8 +52,8 @@ class BlockController {
     this.server.route({
       method: 'GET',
       path: '/stars/address:{address}',
-      handler: (request, h) => {
-
+      handler: async (request, h) => {
+        return blockchain.getBlocksByWallet(request.params.address)
       }
     })
   }

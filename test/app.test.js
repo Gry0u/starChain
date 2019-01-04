@@ -19,6 +19,11 @@ const optionsGetBlockByIndex = {
   uri: SERVER_URL + '/block/0'
 }
 
+const optionsGetBlocksByWallet = {
+  method: 'GET',
+  uri: SERVER_URL + '/stars/address:' + address
+}
+
 test.serial('1. /requestValidation: returns a Request JSON object', async t => {
   const requestObject = await rp(optionsRequestValidation)
   t.is(requestObject.address, address)
@@ -44,7 +49,7 @@ test.serial('2. /message-signature/validate: returns a JSON object with register
   t.is(validRequestObj.status.address, address)
 })
 
-test('3. /block: adds a star block to the blockchain. Returns the added block as JSON object', async t => {
+test.serial('3. /block: adds a star block to the blockchain. Returns the added block as JSON object', async t => {
   const optionsAddBlock = {
     method: 'POST',
     uri: SERVER_URL + '/block',
@@ -67,13 +72,13 @@ test('3. /block: adds a star block to the blockchain. Returns the added block as
   t.is(starBlock.body.address, address)
 })
 
-test('4. /block/[INDEX]: returns block of the corresponding height as JSON object', async t => {
+test.serial('4. /block/[INDEX]: returns block of the corresponding height as JSON object', async t => {
   const block = JSON.parse(await rp(optionsGetBlockByIndex))
   t.is(block.height, 0)
   t.is(block.body, 'Genesis Block')
 })
 
-test('5. /stars/hash:[HASH]: returns block of the corresponding hash as JSON object', async t => {
+test.serial('5. /stars/hash:[HASH]: returns block of the corresponding hash as JSON object', async t => {
   const hash = JSON.parse(await rp(optionsGetBlockByIndex)).hash
   const optionsGetBlockByHash = {
     method: 'GET',
@@ -82,4 +87,9 @@ test('5. /stars/hash:[HASH]: returns block of the corresponding hash as JSON obj
   const block = JSON.parse(await rp(optionsGetBlockByHash))
   t.is(block.height, 0)
   t.is(block.body, 'Genesis Block')
+})
+
+test('6. /stars/address:[ADDRESS]: returns an array of blocks of the corresponding address', async t => {
+  const blocks = JSON.parse(await rp(optionsGetBlocksByWallet))
+  t.is(blocks[0].body.address, address)
 })
