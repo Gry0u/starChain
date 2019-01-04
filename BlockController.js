@@ -1,4 +1,4 @@
-/* Controller to manage routes of Web API
+/* REST API
 */
 const BlockClass = require('./Block.js')
 const BlockChain = require('./BlockChain.js')
