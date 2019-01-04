@@ -38,8 +38,8 @@ class MemPool extends LevelDB.LevelDB {
     }
   }
 
-  verifyAddressRequest () {
-
+  async verifyAddressRequest (address) {
+    return this.getLevelDBData(address)
   }
 }
 

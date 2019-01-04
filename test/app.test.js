@@ -38,3 +38,16 @@ test.serial('2. /message-signature/validate: returns a JSON object with register
   t.true(validRequestObj.status.messageSignature)
   t.is(validRequestObj.status.address, address)
 })
+
+test.serial('3. /block: returns a boolean describing whether an address is valid and allowed to register a star', async t => {
+  const optionsBlock = {
+    method: 'POST',
+    uri: SERVER_URL + '/block',
+    body: {
+      address: address
+    },
+    json: true
+  }
+  const requestObj = await rp(optionsBlock)
+  t.true(requestObj.messageSignature)
+})
