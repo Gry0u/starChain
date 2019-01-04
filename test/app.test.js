@@ -39,15 +39,25 @@ test.serial('2. /message-signature/validate: returns a JSON object with register
   t.is(validRequestObj.status.address, address)
 })
 
-test.serial('3. /block: returns a boolean describing whether an address is valid and allowed to register a star', async t => {
+test.serial('3. /block: adds a star block to the blockchain. Returns the added block as JSON object', async t => {
   const optionsBlock = {
     method: 'POST',
     uri: SERVER_URL + '/block',
     body: {
-      address: address
+      address: address,
+      star: {
+        dec: "68° 52' 56.9",
+        ra: '16h 29m 1.0s',
+        story: 'Star added for test purposes'
+      }
     },
     json: true
   }
-  const requestObj = await rp(optionsBlock)
-  t.true(requestObj.messageSignature)
+  const starBlock = await rp(optionsBlock)
+  t.truthy(starBlock.hash)
+  t.truthy(starBlock.height)
+  t.truthy(starBlock.body.story)
+  t.truthy(starBlock.time)
+  t.truthy(starBlock.previousBlockHash)
+  t.is(starBlock.body.address, address)
 })

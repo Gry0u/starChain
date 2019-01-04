@@ -59,13 +59,30 @@ class BlockController {
   }
 
   // POST Endpoint to add a new Star Block, url: "/block"
-  // request data:
+  // request data: address=...&star={dec:.., ra: .., story:..}
   addStar () {
     this.server.route({
       method: 'POST',
       path: '/block',
-      handler: (request, h) => {
-        return mempool.verifyAddressRequest(request.payload.address)
+      handler: async (request, h) => {
+        // Check that address is verified
+        const isValid = mempool.verifyAddressRequest(request.payload.address)
+        if (isValid) {
+          // Encode data
+          const { ra, dec, mag, cen, story } = request.payload.star
+          const body = {
+            address: request.payload.address,
+            ra: ra,
+            dec: dec,
+            mag: mag,
+            cen: cen,
+            story: Buffer.from(story).toString('hex')
+          }
+          // add block
+          return JSON.parse(await blockchain.addBlock(new BlockClass.Block(body)))
+        } else {
+          return 'Address not verified. Validate your address at /message-signature/validate'
+        }
       }
     })
   }
