@@ -55,10 +55,41 @@ class Blockchain {
 
   /* get block object from the blockchain
   arg: height integer
-  returns: Promise
+  returns: JSON
   */
   async getBlock (height) {
     return JSON.parse(await this.bd.getLevelDBData(height))
+  }
+
+  /* get block object from the blockchain
+  arg: hash
+  returns: Promise
+  */
+  getBlockByHash (hash) {
+    let self = this
+    let block = null
+    return new Promise((resolve, reject) => {
+      self.bd.db.createReadStream()
+        .on('data', data => {
+          if (JSON.parse(data.value).hash === hash) {
+            block = data.value
+          }
+        })
+        .on('error', err => {
+          reject(err)
+        })
+        .on('close', _ => {
+          resolve(block)
+        })
+    })
+  }
+
+  /* get block objects from the blockchain
+  arg: address
+  returns: Promise
+  */
+  async getBlockByWallet (address) {
+
   }
 
   /* Validate block = check if a block has been tampered

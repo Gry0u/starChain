@@ -41,8 +41,8 @@ class BlockController {
     this.server.route({
       method: 'GET',
       path: '/stars/hash:{hash}',
-      handler: (request, h) => {
-
+      handler: async (request, h) => {
+        return JSON.parse(await blockchain.getBlockByHash(request.params.hash))
       }
     })
   }
