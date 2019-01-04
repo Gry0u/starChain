@@ -42,7 +42,7 @@ class BlockController {
       method: 'GET',
       path: '/stars/hash:{hash}',
       handler: async (request, h) => {
-        return JSON.parse(await blockchain.getBlockByHash(request.params.hash))
+        return blockchain.getBlockByHash(request.params.hash)
       }
     })
   }

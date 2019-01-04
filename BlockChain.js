@@ -79,7 +79,8 @@ class Blockchain {
       self.bd.db.createReadStream()
         .on('data', data => {
           if (JSON.parse(data.value).hash === hash) {
-            block = data.value
+            block = JSON.parse(data.value)
+            block.body.storyDecoded = hex2ascii(block.body.story)
           }
         })
         .on('error', err => {
@@ -102,7 +103,9 @@ class Blockchain {
       self.bd.db.createReadStream()
         .on('data', data => {
           if (JSON.parse(data.value).body.address === address) {
-            blocks.push(JSON.parse(data.value))
+            let block = JSON.parse(data.value)
+            block.body.storyDecoded = hex2ascii(block.body.story)
+            blocks.push(block)
           }
         })
         .on('error', err => {
