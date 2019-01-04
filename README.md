@@ -52,7 +52,7 @@ First the user needs to request validation of their wallet address before being 
 After submitting a validation request, the user needs to prove that he is the owner of the considered address by providing the signature of the message returned in the previous step.
 **METHOD**: POST  
 **URL**: `/message-signature/validate`  
-**Parameters**  
+**PARAMETERS**  
 - `address`
 - `signature`
 
@@ -73,7 +73,7 @@ After submitting a validation request, the user needs to prove that he is the ow
 After validation of the signature, the user can now register a star.
 **METHOD**: POST  
 **URL**: `/block`  
-**Parameters**  
+**PARAMETERS**  
 - `address`
 - `star`:  
 ```
