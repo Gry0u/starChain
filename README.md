@@ -36,7 +36,7 @@ You may select a different one by updating the `PORT` parameter of the **BlockAP
 First the user needs to request validation of their wallet address before being able to register any stars.
 **METHOD**: POST  
 **URL**: `/requestValidation`  
-**Parameter**  
+**PARAMETER**  
 - `address`: user's wallet address  
 
 **RESPONSE**
