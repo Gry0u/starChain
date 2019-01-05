@@ -78,10 +78,12 @@ class BlockController {
             cen: cen,
             story: Buffer.from(story).toString('hex')
           }
+          // invalidate address to prevent resubmission of star without prior address verification
+          mempool.deleteLevelDBData(request.payload.address)
           // add block
           return JSON.parse(await blockchain.addBlock(new BlockClass.Block(body)))
         } else {
-          return 'Address not verified. Validate your address at /message-signature/validate'
+          return 'Address not verified (or need to be reverified). Validate your address at /message-signature/validate'
         }
       }
     })

@@ -39,7 +39,8 @@ class MemPool extends LevelDB.LevelDB {
       const timeElapse = (new Date().getTime().toString().slice(0, -3)) - request.requestTimeStamp
       const timeLeft = (TimeoutRequestsWindowTime / 1000) - timeElapse
       if (timeLeft < 0) {
-        return 'Request expired. Submit again a validation request at /requestValidation'
+        this.deleteLevelDBData(address)
+        return 'Request expired and was hence deleted from the mempool. Submit again a validation request at /requestValidation'
       } else {
         // verify signature
         const isValid = bitcoinMessage.verify(request.message, address, signature)
