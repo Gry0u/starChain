@@ -61,7 +61,10 @@ class Blockchain {
   async getBlock (height) {
     try {
       let block = JSON.parse(await this.bd.getLevelDBData(height))
-      block.body.storyDecoded = hex2ascii(block.body.story)
+      // (genesis block doesn't have a body.story property)
+      if (block.body.story) {
+        block.body.storyDecoded = hex2ascii(block.body.story)
+      }
       return block
     } catch (err) {
       return 'Block not found'
