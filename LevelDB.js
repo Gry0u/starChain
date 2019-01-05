@@ -63,6 +63,11 @@ class LevelDB {
         })
     })
   }
+
+  // Method to delete entry
+  async deleteLevelDBData (address) {
+    return this.db.del(address)
+  }
 }
 
 module.exports.LevelDB = LevelDB

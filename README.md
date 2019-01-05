@@ -113,6 +113,8 @@ After validation of the signature, the user can now register a star.
 **METHOD**: GET  
 **URL**: `/stars/[ADDRESS]`  
 
+## Tests
+Run `npx ava` to perform the tests defined in [test.js](./test/app.test.js).
 
 
 ## Resources

@@ -93,7 +93,7 @@ class BlockController {
       method: 'POST',
       path: '/requestValidation',
       handler: async (request, h) => {
-        return JSON.parse(await mempool.addValidationRequest(request.payload.address))
+        return mempool.addValidationRequest(request.payload.address)
       }
     })
   }
