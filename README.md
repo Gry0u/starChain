@@ -33,7 +33,7 @@ RA 13h 03m 33.35sec, Dec -49° 31’ 38.1” Mag 4.83 Cen
 The server runs locally by default on port 8000.  
 You may select a different one by updating the `PORT` parameter of the **BlockAPI** constructor in [app.js](app.js).
 ### Submit a validation request
-First the user needs to request validation of their wallet address before being able to register any stars.
+First the user needs to request validation of their wallet address before being able to register any stars.  
 **METHOD**: POST  
 **URL**: `/requestValidation`  
 **PARAMETER**  
@@ -49,7 +49,9 @@ First the user needs to request validation of their wallet address before being 
 }
 ```
 ### Prove ownership of wallet
-After submitting a validation request, the user needs to prove that he is the owner of the considered address by providing the signature of the message returned in the previous step.
+After submitting a validation request, the user needs to prove that he is the owner of the considered address by providing the signature of the message returned in the previous step.  
+> To get the required message signature, one could use the sign function of the [bitcoinjs-message](https://github.com/bitcoinjs/bitcoinjs-message) library or the sign feature of a wallet like [electrum](https://electrum.org/). 
+
 **METHOD**: POST  
 **URL**: `/message-signature/validate`  
 **PARAMETERS**  
