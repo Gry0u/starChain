@@ -63,7 +63,7 @@ class Blockchain {
       let block = JSON.parse(await this.bd.getLevelDBData(height))
       // (genesis block doesn't have a body.story property)
       if (block.body.story) {
-        block.body.storyDecoded = hex2ascii(block.body.story)
+        block.body.star.storyDecoded = hex2ascii(block.body.star.story)
       }
       return block
     } catch (err) {
@@ -83,7 +83,7 @@ class Blockchain {
         .on('data', data => {
           if (JSON.parse(data.value).hash === hash) {
             block = JSON.parse(data.value)
-            block.body.storyDecoded = hex2ascii(block.body.story)
+            block.body.star.storyDecoded = hex2ascii(block.body.star.story)
           }
         })
         .on('error', err => {
@@ -107,7 +107,7 @@ class Blockchain {
         .on('data', data => {
           if (JSON.parse(data.value).body.address === address) {
             let block = JSON.parse(data.value)
-            block.body.storyDecoded = hex2ascii(block.body.story)
+            block.body.star.storyDecoded = hex2ascii(block.body.star.story)
             blocks.push(block)
           }
         })

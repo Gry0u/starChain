@@ -70,18 +70,25 @@ class BlockController {
         if (isValid) {
           // Encode data
           const { ra, dec, mag, cen, story } = request.payload.star
-          const body = {
-            address: request.payload.address,
-            ra: ra,
-            dec: dec,
-            mag: mag,
-            cen: cen,
-            story: Buffer.from(story).toString('hex')
+          // Check that at least ra, dec and body are defined
+          if (ra && dec && story) {
+            const body = {
+              address: request.payload.address,
+              star: {
+                ra: ra,
+                dec: dec,
+                mag: mag,
+                cen: cen,
+                story: Buffer.from(story).toString('hex')
+              }
+            }
+            // invalidate address to prevent resubmission of star without prior address verification
+            mempool.deleteLevelDBData(request.payload.address)
+            // add block
+            return JSON.parse(await blockchain.addBlock(new BlockClass.Block(body)))
+          } else {
+            return 'Provide ra, dec and story parameters in your request.'
           }
-          // invalidate address to prevent resubmission of star without prior address verification
-          mempool.deleteLevelDBData(request.payload.address)
-          // add block
-          return JSON.parse(await blockchain.addBlock(new BlockClass.Block(body)))
         } else {
           return 'Address not verified (or need to be reverified). Validate your address at /message-signature/validate'
         }
