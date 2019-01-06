@@ -66,7 +66,7 @@ class BlockController {
       path: '/block',
       handler: async (request, h) => {
         // Check that address is verified
-        const isValid = mempool.verifyAddressRequest(request.payload.address)
+        const isValid = await mempool.verifyAddressRequest(request.payload.address)
         if (isValid) {
           // Encode data
           const { ra, dec, mag, cen, story } = request.payload.star
@@ -90,7 +90,7 @@ class BlockController {
             return 'Provide ra, dec and story parameters in your request.'
           }
         } else {
-          return 'Address not verified (or need to be reverified). Validate your address at /message-signature/validate'
+          return "This address hasn't been verified yet or need to be validated again before registering another star. Validate your address at /message-signature/validate"
         }
       }
     })

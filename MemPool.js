@@ -31,10 +31,9 @@ class MemPool extends LevelDB.LevelDB {
   // TODO: reduce val window when resubmitting a request
 
   async validateRequestByWallet (address, signature) {
-    // get request from mempool
-    let request = JSON.parse(await this.getLevelDBData(address))
-    // verify that request found
-    if (request) {
+    try {
+      // get request from mempool
+      let request = JSON.parse(await this.getLevelDBData(address))
       // verify that request not expired
       const timeElapse = (new Date().getTime().toString().slice(0, -3)) - request.requestTimeStamp
       const timeLeft = (TimeoutRequestsWindowTime / 1000) - timeElapse
@@ -54,13 +53,17 @@ class MemPool extends LevelDB.LevelDB {
           'status': request
         }
       }
-    } else {
-      return 'Request not found. Submit a validation request at /requestValidation'
+    } catch (err) {
+      return 'Request not found in mempool. Submit a validation request first at /requestValidation'
     }
   }
 
   async verifyAddressRequest (address) {
-    return this.getLevelDBData(address).messageSignature
+    try {
+      return JSON.parse(await this.getLevelDBData(address)).messageSignature
+    } catch (err) {
+      return false
+    }
   }
 }
 
