@@ -20,12 +20,12 @@ class MemPool extends LevelDB.LevelDB {
         this.deleteLevelDBData(address)
         const request = new Request.Request(address)
         console.log('Previous request deleted, new one added')
-        return JSON.parse(this.addLevelDBData(address, JSON.stringify(request)))
+        return JSON.parse(await this.addLevelDBData(address, JSON.stringify(request)))
       }
     } catch (err) {
       // if no request in mempool for this address, submit new one
       const request = new Request.Request(address)
-      return JSON.parse(this.addLevelDBData(address, JSON.stringify(request)))
+      return JSON.parse(await this.addLevelDBData(address, JSON.stringify(request)))
     }
   }
   // TODO: reduce val window when resubmitting a request

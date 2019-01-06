@@ -68,17 +68,16 @@ test.serial('3. /block: adds a star block to the blockchain. Returns the added b
   const starBlock = await rp(optionsAddBlock)
   t.truthy(starBlock.hash)
   t.truthy(starBlock.height)
-  t.truthy(starBlock.body.story)
+  t.truthy(starBlock.body.star.story)
   t.truthy(starBlock.time)
   t.truthy(starBlock.previousBlockHash)
   t.is(starBlock.body.address, address)
 })
 
-
 test.serial('4. /block/[INDEX]: returns block of the corresponding height as JSON object', async t => {
   const block = await rp(optionsGetBlockByIndex)
   t.is(block.height, 1)
-  t.is(block.body.storyDecoded, 'Star added for test purposes')
+  t.is(block.body.star.storyDecoded, 'Star added for test purposes')
 })
 
 test.serial('5. /stars/hash:[HASH]: returns block of the corresponding hash as JSON object', async t => {
@@ -89,7 +88,7 @@ test.serial('5. /stars/hash:[HASH]: returns block of the corresponding hash as J
   }
   const block = JSON.parse(await rp(optionsGetBlockByHash))
   t.is(block.height, 1)
-  t.is(block.body.storyDecoded, 'Star added for test purposes')
+  t.is(block.body.star.storyDecoded, 'Star added for test purposes')
 })
 
 test('6. /stars/address:[ADDRESS]: returns an array of blocks of the corresponding address', async t => {
