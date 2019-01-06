@@ -106,15 +106,15 @@ After validation of the signature, the user can now register a star.
 #### By height
 **METHOD**: GET  
 **URL**: `/block/[HEIGHT]`  
-![get star by height response POSTMAN]('./img/getBlock.png')
+![get star by height response POSTMAN](./img/getBlock.png)
 #### By hash
 **METHOD**: GET  
 **URL**: `/stars/[HASH]`  
-![get star by hash response POSTMAN]('./img/getBlockByHash.png')
+![get star by hash response POSTMAN](./img/getBlockByHash.png)
 #### By wallet address
 **METHOD**: GET  
 **URL**: `/stars/[ADDRESS]`  
-![get stars by wallet response POSTMAN]('./img/getBlockBywallet.png')
+![get stars by wallet response POSTMAN](./img/getBlocksByWallet.png)
 
 
 ## Tests
