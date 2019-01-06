@@ -70,7 +70,7 @@ After submitting a validation request, the user needs to prove that he is the ow
 }
 ```
 ### Register star
-After validation of the signature, the user can now register a star.
+After validation of the signature, the user can now register a star.  
 **METHOD**: POST  
 **URL**: `/block`  
 **PARAMETERS**  
@@ -106,12 +106,16 @@ After validation of the signature, the user can now register a star.
 #### By height
 **METHOD**: GET  
 **URL**: `/block/[HEIGHT]`  
+![get star by height response POSTMAN]('./img/getBlock.png')
 #### By hash
 **METHOD**: GET  
 **URL**: `/stars/[HASH]`  
+![get star by hash response POSTMAN]('./img/getBlockByHash.png')
 #### By wallet address
 **METHOD**: GET  
 **URL**: `/stars/[ADDRESS]`  
+![get stars by wallet response POSTMAN]('./img/getBlockBywallet.png')
+
 
 ## Tests
 Run `npx ava` to perform the tests defined in [test.js](./test/app.test.js).
