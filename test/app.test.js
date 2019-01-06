@@ -74,13 +74,31 @@ test.serial('3. /block: adds a star block to the blockchain. Returns the added b
   t.is(starBlock.body.address, address)
 })
 
-test.serial('4. /block/[INDEX]: returns block of the corresponding height as JSON object', async t => {
+test.serial("4. /block: can't post a second block without revalidating address first", async t => {
+  const optionsAddBlock2 = {
+    method: 'POST',
+    uri: SERVER_URL + '/block',
+    body: {
+      address: address,
+      star: {
+        dec: "68° 52' 56.9",
+        ra: '16h 29m 1.0s',
+        story: 'Try to add second star'
+      }
+    },
+    json: true
+  }
+  const starBlock = await rp(optionsAddBlock2)
+  t.is(starBlock, "This address hasn't been verified yet or need to be validated again before registering another star. Validate your address at /message-signature/validate")
+})
+
+test.serial('5. /block/[INDEX]: returns block of the corresponding height as JSON object', async t => {
   const block = await rp(optionsGetBlockByIndex)
   t.is(block.height, 1)
   t.is(block.body.star.storyDecoded, 'Star added for test purposes')
 })
 
-test.serial('5. /stars/hash:[HASH]: returns block of the corresponding hash as JSON object', async t => {
+test.serial('6. /stars/hash:[HASH]: returns block of the corresponding hash as JSON object', async t => {
   const hash = (await rp(optionsGetBlockByIndex)).hash
   const optionsGetBlockByHash = {
     method: 'GET',
@@ -91,7 +109,7 @@ test.serial('5. /stars/hash:[HASH]: returns block of the corresponding hash as J
   t.is(block.body.star.storyDecoded, 'Star added for test purposes')
 })
 
-test('6. /stars/address:[ADDRESS]: returns an array of blocks of the corresponding address', async t => {
+test('7. /stars/address:[ADDRESS]: returns an array of blocks of the corresponding address', async t => {
   const blocks = await rp(optionsGetBlocksByWallet)
   t.is(blocks[0].body.address, address)
 })
